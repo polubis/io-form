@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-empty-function */
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import Form from '.';
 
@@ -5,7 +6,7 @@ describe('Form', () => {
   it('throws error for invalid values', () => {
     (() => {
       try {
-        new Form(null!);
+        Form(null!);
         expect(true).toBe(false);
       } catch (err) {
         expect(err.message).toBe('values parameter must be an object');
@@ -13,7 +14,7 @@ describe('Form', () => {
     })();
     (() => {
       try {
-        new Form(undefined!);
+        Form(undefined!);
         expect(true).toBe(false);
       } catch (err) {
         expect(err.message).toBe('values parameter must be an object');
@@ -21,7 +22,7 @@ describe('Form', () => {
     })();
     (() => {
       try {
-        new Form([]);
+        Form([]);
         expect(true).toBe(false);
       } catch (err) {
         expect(err.message).toBe('values parameter must be an object');
@@ -32,7 +33,7 @@ describe('Form', () => {
   it('throws error for invalid fns', () => {
     (() => {
       try {
-        new Form({}, null!);
+        Form({}, null!);
         expect(true).toBe(false);
       } catch (err) {
         expect(err.message).toBe('fns parameter must be an object');
@@ -40,7 +41,7 @@ describe('Form', () => {
     })();
     (() => {
       try {
-        new Form({}, []);
+        Form({}, []);
         expect(true).toBe(false);
       } catch (err) {
         expect(err.message).toBe('fns parameter must be an object');
@@ -54,7 +55,7 @@ describe('Form', () => {
       email: 'exampel@wp.pl',
     };
 
-    const form = new Form(initValues);
+    const form = Form(initValues);
 
     expect(form.values).toEqual(initValues);
     expect(form.dirty).toBeFalsy();
@@ -63,16 +64,16 @@ describe('Form', () => {
   });
 
   it('allows set dirty flag', () => {
-    expect(new Form({}, {}, true).dirty).toBeTruthy();
+    expect(Form({}, {}, true).dirty).toBeTruthy();
   });
 
   it('allows set touched flag', () => {
-    expect(new Form({}, {}, false, true).touched).toBeTruthy();
+    expect(Form({}, {}, false, true).touched).toBeTruthy();
   });
 
   it('validates on init', () => {
     (() => {
-      const form = new Form(
+      const form = Form(
         {
           code: 112,
           email: '',
@@ -90,7 +91,7 @@ describe('Form', () => {
     })();
 
     (() => {
-      const form = new Form(
+      const form = Form(
         {
           code: 112,
           email: 'polubik194',
@@ -108,7 +109,7 @@ describe('Form', () => {
 
   describe('set()', () => {
     it('changes values', () => {
-      const form = new Form({
+      const form = Form({
         code: 112,
         email: 'exampel@wp.pl',
       });
@@ -127,7 +128,7 @@ describe('Form', () => {
     });
 
     it('changes values partly', () => {
-      const form = new Form(
+      const form = Form(
         {
           code: 112,
           email: 'exampel@wp.pl',
@@ -144,7 +145,7 @@ describe('Form', () => {
     });
 
     it('validates on change', () => {
-      const form = new Form(
+      const form = Form(
         {
           code: 112,
           email: 'exampel@wp.pl',
@@ -168,7 +169,7 @@ describe('Form', () => {
     });
 
     it('sets touched flag', () => {
-      const form = new Form({
+      const form = Form({
         code: 112,
         email: 'exampel@wp.pl',
       });
@@ -183,7 +184,7 @@ describe('Form', () => {
     it('throws error for invalid values', () => {
       (() => {
         try {
-          new Form({}).set(null!);
+          Form({}).set(null!);
         } catch (err) {
           expect(err.message).toBe('values parameter must be an object');
         }
@@ -191,7 +192,7 @@ describe('Form', () => {
 
       (() => {
         try {
-          new Form({}).set(undefined!);
+          Form({}).set(undefined!);
         } catch (err) {
           expect(err.message).toBe('values parameter must be an object');
         }
@@ -199,7 +200,7 @@ describe('Form', () => {
 
       (() => {
         try {
-          new Form({}).set([]);
+          Form({}).set([]);
         } catch (err) {
           expect(err.message).toBe('values parameter must be an object');
         }
@@ -207,9 +208,32 @@ describe('Form', () => {
     });
   });
 
+  describe('submit()', () => {
+    it('prevents default', () => {
+      const event = {
+        preventDefault: () => {},
+      };
+
+      const spy = jest.spyOn(event, 'preventDefault');
+
+      Form({}).submit(event);
+
+      expect(spy).toHaveBeenCalledTimes(1);
+    });
+
+    it('returns new instance', () => {
+      expect(Form({}).submit().dirty).toEqual(Form({}).dirty);
+      expect(Form({}).submit().errors).toEqual(Form({}).errors);
+      expect(Form({}).submit().fns).toEqual(Form({}).fns);
+      expect(Form({}).submit().invalid).toEqual(Form({}).invalid);
+      expect(Form({}).submit().touched).toEqual(Form({}).touched);
+      expect(Form({}).submit().values).toEqual(Form({}).values);
+    });
+  });
+
   describe('next()', () => {
     it('changes values', () => {
-      const form = new Form({
+      const form = Form({
         code: 112,
         email: 'exampel@wp.pl',
       });
@@ -226,7 +250,7 @@ describe('Form', () => {
     });
 
     it('changes values partly', () => {
-      const form = new Form(
+      const form = Form(
         {
           code: 112,
           email: 'exampel@wp.pl',
@@ -241,7 +265,7 @@ describe('Form', () => {
     });
 
     it('validates on change', () => {
-      const form = new Form(
+      const form = Form(
         {
           code: 112,
           email: 'exampel@wp.pl',
@@ -265,7 +289,7 @@ describe('Form', () => {
     });
 
     it('sets touched flag', () => {
-      const form = new Form({
+      const form = Form({
         code: 112,
         email: 'exampel@wp.pl',
       });
@@ -280,7 +304,7 @@ describe('Form', () => {
     it('throws error for invalid values', () => {
       (() => {
         try {
-          new Form({}).next(null!);
+          Form({}).next(null!);
         } catch (err) {
           expect(err.message).toBe('values parameter must be an object');
         }
@@ -288,7 +312,7 @@ describe('Form', () => {
 
       (() => {
         try {
-          new Form({}).next(undefined!);
+          Form({}).next(undefined!);
         } catch (err) {
           expect(err.message).toBe('values parameter must be an object');
         }
@@ -296,7 +320,7 @@ describe('Form', () => {
 
       (() => {
         try {
-          new Form({}).next([]);
+          Form({}).next([]);
         } catch (err) {
           expect(err.message).toBe('values parameter must be an object');
         }
