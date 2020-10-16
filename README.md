@@ -18,7 +18,6 @@ import Form from 'io-form';
 const form = Form({
   email: '',
   username: '',
-  code: null,
 });
 
 form.set({
@@ -46,7 +45,6 @@ interface RegisterFormData {
 const form = Form<RegisterFormData>({
   email: '',
   username: '',
-  code: null,
 });
 
 form.set({
