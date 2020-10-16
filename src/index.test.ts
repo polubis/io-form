@@ -222,12 +222,15 @@ describe('Form', () => {
     });
 
     it('returns new instance', () => {
-      expect(Form({}).submit().dirty).toEqual(Form({}).dirty);
       expect(Form({}).submit().errors).toEqual(Form({}).errors);
       expect(Form({}).submit().fns).toEqual(Form({}).fns);
       expect(Form({}).submit().invalid).toEqual(Form({}).invalid);
       expect(Form({}).submit().touched).toEqual(Form({}).touched);
       expect(Form({}).submit().values).toEqual(Form({}).values);
+    });
+
+    it('sets dirty flag', () => {
+      expect(Form({}).submit().dirty).toBeTruthy();
     });
   });
 

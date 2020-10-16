@@ -80,6 +80,16 @@ abstract class FormBase<V extends Values<V>, R> implements Formable<V, R> {
     return variable === null || variable === undefined || Array.isArray(variable);
   }
 
+  protected _markAsDirty(): void {
+    this.dirty = true;
+  }
+
+  protected _preventSubmit<E extends SubmitEvent>(e?: E): void {
+    if (e) {
+      e.preventDefault();
+    }
+  }
+
   protected _markAsTouched(): void {
     this.touched = true;
   }
@@ -108,6 +118,15 @@ class Form<V extends Values<V>> extends FormBase<V, boolean> {
     super(...args);
   }
 
+  /**
+   * Builds form logic object.
+   */
+  static build = <V extends Values<V>>(...args: Args<V, boolean>): Formable<V, boolean> =>
+    new Form<V>(...args);
+
+  /**
+   * Creates new instance in immutable way.
+   */
   next(values: Partial<V>): Formable<V, boolean> {
     this._markAsTouched();
     this._setValues(values);
@@ -115,6 +134,9 @@ class Form<V extends Values<V>> extends FormBase<V, boolean> {
     return new Form<V>(this.values, this.fns, this.dirty, this.touched);
   }
 
+  /**
+   * Changes current instance values.
+   */
   set(values: Partial<V>): void {
     if (this._isInvalidParam(values)) {
       throw new Error('values parameter must be an object');
@@ -125,12 +147,19 @@ class Form<V extends Values<V>> extends FormBase<V, boolean> {
     this._setValidation();
   }
 
+  /**
+   * Prevents default behaviour and returns new instance.
+   */
   submit<E extends SubmitEvent>(e?: E): Formable<V, boolean> {
-    e && e.preventDefault();
+    this._preventSubmit(e);
+    this._markAsDirty();
 
     return new Form<V>(this.values, this.fns, this.dirty, this.touched);
   }
 
+  /**
+   * Validates values.
+   */
   validate(keys: Keys<V>, values: V, fns: Fns<V, boolean>): ValidationResult<V, boolean> {
     const errors = keys.reduce((acc, key) => {
       const value = values[key];
@@ -150,5 +179,4 @@ class Form<V extends Values<V>> extends FormBase<V, boolean> {
   }
 }
 
-export default <V extends Values<V>>(...args: Args<V, boolean>): Formable<V, boolean> =>
-  new Form<V>(...args);
+export default Form.build;
