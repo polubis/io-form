@@ -1,6 +1,6 @@
 {
   "name": "io-form",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "A lightweight alternative to form logic building",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
