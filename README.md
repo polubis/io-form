@@ -15,7 +15,7 @@ io-form is TypeScript library which allows to build forms in JS/TS projects and 
 ```js
 import Form from 'io-form';
 
-const form = new Form({
+const form = Form({
   email: '',
   username: '',
   code: null,
@@ -43,7 +43,7 @@ interface RegisterFormData {
   code: number | null;
 }
 
-const form = new Form<RegisterFormData>({
+const form = Form<RegisterFormData>({
   email: '',
   username: '',
   code: null,
